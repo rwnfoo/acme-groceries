@@ -63,6 +63,13 @@ export const createRandomGrocery = () => {
   }
 }
 
+export const loadGrocery = () => {
+  return async function(dispatch){
+    const groceries = (await axios.get('/api/groceries')).data;
+        dispatch({ type: LOAD, groceries})
+  }
+}
+
 const store = createStore(
   reducers,
   applyMiddleware(thunk)
