@@ -1,4 +1,6 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from "redux-thunk"
+import axios from "axios"
 
 const LOAD = "LOAD"
 const UPDATE = "UPDATE"
@@ -29,7 +31,7 @@ const groceriesReducer = (state = [], action) => {
 const viewReducer = (state = '', action) => {
   if(action.type === SET_VIEW){
     //state = {...state, view: action.view};
-
+    state = action.view
   }
   return state;
 }
@@ -39,7 +41,17 @@ const reducers = combineReducers({
   view: viewReducer
 });
 
-const store = createStore(reducers);
+export const createGrocery = (name) => {
+  return async function(dispatch) {
+    const grocery = (await axios.post('/api/groceries', { name })).data;
+    dispatch({ type: CREATE, grocery })
+  }
+}
+
+const store = createStore(
+  reducers,
+  applyMiddleware(thunk)
+);
 
 export default store;
 
