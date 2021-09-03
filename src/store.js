@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from "redux-thunk"
 import axios from "axios"
+import logger from "redux-logger"
 
 const LOAD = "LOAD"
 const UPDATE = "UPDATE"
@@ -59,20 +60,26 @@ export const createRandomGrocery = () => {
   return async function(dispatch){
     const grocery = (await axios.post('/api/groceries/random')).data;
     dispatch({ type: CREATE, grocery });
-
   }
 }
 
 export const loadGrocery = () => {
   return async function(dispatch){
     const groceries = (await axios.get('/api/groceries')).data;
-        dispatch({ type: LOAD, groceries})
+      dispatch({ type: LOAD, groceries})
+  }
+}
+
+export const deleteGrocery = (id) => {
+  return async function(dispatch){
+    await axios.delete(`/api/groceries/delete/${id}`)
+
   }
 }
 
 const store = createStore(
   reducers,
-  applyMiddleware(thunk)
+  applyMiddleware(thunk, logger)
 );
 
 export default store;

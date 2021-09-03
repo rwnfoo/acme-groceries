@@ -4,15 +4,18 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { toggleGrocery, createRandomGrocery } from './store'
 
-const _Groceries = ({ groceries, view, toggle, create })=> {
+const _Groceries = ({ groceries, view, toggle, create, deleteGrocery })=> {
   return (
     <div>
-      <button onClick={ create }>Create</button>
+      <button onClick={ create }>Create Random Shit</button>
       <ul>
         {
-          groceries.filter(grocery => !view || ( grocery.purchased && view === 'purchased') ||( !grocery.purchased && view === 'needs') ).map( grocery => {
+          groceries.filter(grocery => !view ||
+          ( grocery.purchased && view === 'purchased') ||( !grocery.purchased && view === 'needs') ).map( grocery => {
             return (
-              <li onClick={ ()=> toggle(grocery)} key={ grocery.id } className={ grocery.purchased ? 'purchased': ''}>{ grocery.name }</li>
+              <li onClick={ ()=> toggle(grocery)} key={ grocery.id }
+              className={ grocery.purchased ? 'purchased': ''}>{ grocery.name }
+              <button onClick={ () => deleteGrocery(grocery.id) }>Delete</button></li>
             );
           })
         }
@@ -32,7 +35,9 @@ const mapDispatchToProps = (dispatch)=> {
       // const grocery = (await axios.post('/api/groceries/random')).data;
       // dispatch({ type: 'CREATE', grocery });
       dispatch(createRandomGrocery())
-
+    },
+    deleteGrocery: async(id) => {
+      dispatch(deleteGrocery(id))
     }
   };
 };

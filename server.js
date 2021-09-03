@@ -19,6 +19,17 @@ app.get('/api/groceries', async(req, res, next)=> {
   }
 });
 
+app.delete('/api/groceries/:id', async(req,res,next) => {
+  try{
+    const grocery = await Grocery.findByPk(req.params.id)
+    await grocery.destroy()
+    res.sendStatus(204)
+  }
+  catch(ex){
+    next(ex)
+  }
+})
+
 app.put('/api/groceries/:id', async(req, res, next)=> {
   try {
     const grocery = await Grocery.findByPk(req.params.id);
