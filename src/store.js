@@ -48,6 +48,21 @@ export const createGrocery = (name) => {
   }
 }
 
+export const toggleGrocery = (grocery) => {
+  return async function(dispatch){
+    const updated = (await axios.put(`/api/groceries/${grocery.id}`, { purchased: !grocery.purchased })).data;
+    dispatch({ type: UPDATE, grocery: updated});
+  }
+}
+
+export const createRandomGrocery = () => {
+  return async function(dispatch){
+    const grocery = (await axios.post('/api/groceries/random')).data;
+    dispatch({ type: CREATE, grocery });
+
+  }
+}
+
 const store = createStore(
   reducers,
   applyMiddleware(thunk)
